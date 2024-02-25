@@ -1,0 +1,14 @@
+# Allows communication between node and pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: platformnpservice-srv
+spec:
+  type: NodePort
+  selector: 
+    app: platformservice # must match deployment name
+  ports:
+    - name: platformservice # must match deployment name
+      protocol: TCP
+      port: 80
+      targetPort: 80
