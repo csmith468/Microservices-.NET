@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
 
 
@@ -35,3 +37,6 @@ app.MapControllers();
 PrepDb.PrepPopulation(app);
 
 app.Run();
+
+
+// start at 1:51 (controller and actions -> set up postman (he uses insomnia))
