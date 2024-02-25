@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.DTOs;
 using PlatformService.Models;
+using PlatformService.SyncDataServices.HTTP;
 
 namespace PlatformService.Controllers 
 {
@@ -12,11 +13,13 @@ namespace PlatformService.Controllers
     {
         private readonly IPlatformRepo _repo;
         private readonly IMapper _mapper;
+        private readonly ICommandDataClient _commandDataClient;
 
-        public PlatformsController(IPlatformRepo repo, IMapper mapper)
+        public PlatformsController(IPlatformRepo repo, IMapper mapper, ICommandDataClient commandDataClient)
         {
             _repo = repo;
             _mapper = mapper;
+            _commandDataClient = commandDataClient;
         }
 
         [HttpGet]
@@ -39,7 +42,7 @@ namespace PlatformService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto platformCreateDto) 
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatform(PlatformCreateDto platformCreateDto) 
         {
             Console.WriteLine("--> Creating platform.");
             var platformModel = _mapper.Map<Platform>(platformCreateDto);
@@ -49,6 +52,14 @@ namespace PlatformService.Controllers
             if (!result) return BadRequest("Error on creating platform.");
 
             var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
+
+            // Tell command service that a new platform has been created
+            try {
+                await _commandDataClient.SendPlatformToCommand(platformReadDto);
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"--> Could not send synchronously: {ex.Message}");
+            }
 
             // This gives you the route where you can find the entity in HEADERS
             return CreatedAtRoute(nameof(GetPlatformById), new { platformReadDto.Id }, platformReadDto );
