@@ -1,0 +1,24 @@
+# Deployment of Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platforms-depl
+
+spec:
+  replicas: 1 # instances (desired end state, changing number will change number of pods)
+
+  # select template we're creating
+  selector:
+    matchLabels:
+      app: platformservice
+
+  # define pod and container we're going to use
+  template:
+    metadata:
+      labels:
+        app: platformservice
+    spec:
+      containers:
+        - name: platformservice
+          image: chapinsmith/platformservice:latest
+      # can ignore warnings about resource limits here for now

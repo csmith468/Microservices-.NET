@@ -25,7 +25,7 @@ namespace PlatformService.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms() 
         {
-            Console.WriteLine("--> Getting platforms.");
+            Console.WriteLine("--> Getting platforms");
             var platforms = _repo.GetAllPlatforms();
             // should check if null
             return Ok(_mapper.Map<IEnumerable<PlatformReadDto>>(platforms));
@@ -49,7 +49,7 @@ namespace PlatformService.Controllers
             _repo.CreatePlatform(platformModel);
             var result = _repo.SaveChanges();
 
-            if (!result) return BadRequest("Error on creating platform.");
+            if (!result) return BadRequest("--> Error on creating platform");
 
             var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
 

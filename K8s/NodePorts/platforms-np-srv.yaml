@@ -1,4 +1,4 @@
-# Allows communication between node and pod
+# Node Port: Allows communication between node and pod
 apiVersion: v1
 kind: Service
 metadata:

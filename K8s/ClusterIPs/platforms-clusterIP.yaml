@@ -1,0 +1,17 @@
+# Cluster IP config for platform-depl
+apiVersion: v1
+kind: Service
+metadata:
+  name: platforms-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: platformservice # must match deployment name
+  ports:
+  - name: platformservice # must match deployment name
+    protocol: TCP
+    port: 80
+    targetPort: 80
+
+# Can also put all of this into platforms-depl.yaml file 
+# but must put a new line with "---" before this
